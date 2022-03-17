@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"flag"
+	"fmt"
+	"os"
+)
 
 type Book struct{
 	ID string
@@ -66,11 +70,31 @@ func main(){
 	b:= *generateBook(bookData,i)
 	books = append(books,b)
 	}
-	fmt.Println(books)
+	// fmt.Println(books)
+
+	flag.Usage = func(){
+		fmt.Fprintf(os.Stderr, fmt.Sprintf("%s\n",usage))
+	}
+
+	
+	searchByID()
 
 }
+var usage string
+func searchByID(){
 
+	usage="There is no book with this ID, please try another."
+	idPtr := flag.String("get","Please type a book name","Get book by ID" )
+	flag.Parse()
 
+	for _,v :=range books{
+	if *idPtr == v.ID {
+	fmt.Println(v.Name)
+	break
+	} 
+	}
+	flag.Usage()
+}
 
 func generateBook(data BookData, index int)*Book{
 
