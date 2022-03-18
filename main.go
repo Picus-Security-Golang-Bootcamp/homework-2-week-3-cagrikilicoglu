@@ -44,8 +44,14 @@ type AuthorData struct {
 var authors []Author
 var books []Book
 
-// var listPtr = flag.String("list","","List all the books in the list")
-// var idPtr = flag.String("get","","Get book by ID" )
+var usage = `./homework-2-week-3-cagrikilicoglu
+Options: 
+	* list:    Lists all the books in the library, after list command no additional information submitted.
+	* search:  Searches the library to check if the search input corresponds any books in the library. The search is elastic, if any book name contains search input words, prints the name of the book.
+	* get:     Serches the library by the input book ID given by the user after the command.
+	* delete:  Serches the library by the input book ID given by the user after the command. If the ID matches any of the books, set it's library status to deleted.
+	*buy:      Serches the library by the input book ID given by the user after the command. If the ID matches any of the books, order the books by the number after input ID.
+`
 
 func main() {
 	dataLength := 5
@@ -76,16 +82,19 @@ func main() {
 		b := *generateBook(bookData, i)
 		books = append(books, b)
 	}
-	// fmt.Println(books)
 
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, fmt.Sprintf("%s\n", usage))
 	}
 	flag.Parse()
 
+	getCommand()
+
+}
+
+func getCommand() {
 	if len(os.Args) > 1 {
 		//if an arguement is given, execute respective function
-
 		switch os.Args[1] {
 		case "list":
 			list()
@@ -97,41 +106,14 @@ func main() {
 			deleteByID()
 		case "buy":
 			buyByID()
+		default:
+			flag.Usage()
 		}
-		// if os.Args[1] == "list" {
-		// 	list()
-		// } else if os.Args[1] == "search"{
-		// 	searchByName()
-		// } else {
-		// 	err := errors.New("This arguement does not exist. Please try again.")
-		// 	fmt.Println(err)
-		// }
-		// } else {
-		// 	err := errors.New("Please type one of the 'list' or 'search <bookname>' arguements")
-		// 	fmt.Println(err)
-		// }
+	} else {
 
-		// if *idPtr != "" {
-		// 	searchByID()
-		// }
-		// if *listPtr == ""{
-		// 	list()
-		// }
-
-		// switch idPointer{
-		// case "list":
-		// list()
-		// case "get":
-		// searchByID()
-		// }
+		flag.Usage()
 	}
 }
-
-var usage string
-
-// var (
-// 	command
-// )
 
 func list() {
 	if strings.Join(os.Args[2:], " ") == "" {
@@ -151,6 +133,14 @@ func searchByName() {
 			fmt.Println(v.Name)
 			isListed = true
 			break
+		}
+	}
+
+	for _, v := range books {
+		if strings.Contains(strings.ToLower(v.Name), strings.ToLower(bookName)) && isListed == false {
+			fmt.Println(v.Name)
+			isListed = true
+
 		}
 	}
 
@@ -234,9 +224,9 @@ func buyByID() {
 
 			if v.StockNumber >= numberOfBooks {
 				if numberOfBooks == 1 {
-					fmt.Printf("%d %s book is succesfully ordered.\n", numberOfBooks, v.Name)
+					fmt.Printf("%d %s (of ID: %s) book is succesfully ordered.\n", numberOfBooks, v.Name, v.ID)
 				} else {
-					fmt.Printf("%d %s books are succesfully ordered.\n", numberOfBooks, v.Name)
+					fmt.Printf("%d %s (of ID: %s) books are succesfully ordered.\n", numberOfBooks, v.Name, v.ID)
 				}
 				isListed = true
 				break
