@@ -30,7 +30,7 @@ go run main.go list
 
 With the "search" arguement, the user can search if a certain book of his/her choice is on the list, by the name of the book. After search arguement, the name of the book to be searched should be written. If this book is on the list, the app prints its name. If it is not, the app gives error.
 
-"search" arguement, searches the books elastically meaning that if any of the books on the list contains the <bookName> input, the app still prints its name.
+"search" arguement, searches the books elastically meaning that if any of the books on the list contains the <bookName> input, the app still finds and prints its name.
 
 Note that "search" arguement is case insensitive.
 
