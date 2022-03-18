@@ -56,7 +56,7 @@ go run main.go search 3
 
 ### delete Arguement
 
-With the "delete" arguement, the user can delete a certain book of his/her choice from list by the ID of the book. After "delete" arguement, the ID of the book to be deleted should be written. If any book corresponding the input ID is on the list, the app set the book status to deleted. If it is not, the app gives error.
+With the "delete" arguement, the user can delete a certain book of his/her choice from list by the ID of the book. After "delete" arguement, the ID of the book to be deleted should be written. If any book corresponding the input ID is on the list, the app set the book status to deleted and prints a successful deletion message. If it is not, the app gives error.
 
 Note that the "delete" arguement is case sensitive in terms of ID to prevent misleading to another book.
 
