@@ -228,9 +228,17 @@ func buyByID() {
 				} else {
 					fmt.Printf("%d %s (of ID: %s) books are succesfully ordered.\n", numberOfBooks, v.Name, v.ID)
 				}
-				isListed = true
-				break
+
+			} else {
+				if numberOfBooks == 1 {
+					fmt.Printf("The book is out of stock. Please try ordering later.\n")
+				} else {
+					fmt.Printf("No sufficient %s (of ID: %s) books in the stock. Please try ordering less than %d books.\n", v.Name, v.ID, (v.StockNumber + 1))
+				}
+
 			}
+			isListed = true
+			break
 
 		}
 	}
