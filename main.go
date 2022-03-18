@@ -4,45 +4,46 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"libraryApp/bookList"
 	"os"
 	"strconv"
 	"strings"
 )
 
-type Book struct {
-	ID          string
-	Name        string
-	PageNumber  uint
-	StockNumber int
-	Price       float32
-	StockID     string
-	ISBN        string
-	isDeleted   bool
-	Author      Author
-}
+// type Book struct {
+// 	ID          string
+// 	Name        string
+// 	PageNumber  uint
+// 	StockNumber int
+// 	Price       float32
+// 	StockID     string
+// 	ISBN        string
+// 	isDeleted   bool
+// 	Author      Author
+// }
 
-type Author struct {
-	ID   string
-	Name string
-}
+// type Author struct {
+// 	ID   string
+// 	Name string
+// }
 
-type BookData struct {
-	IDs          []string
-	Names        []string
-	PageNumbers  []uint
-	StockNumbers []int
-	Prices       []float32
-	StockIDs     []string
-	ISBNs        []string
-	Authors      []Author
-}
-type AuthorData struct {
-	IDs   []string
-	Names []string
-}
+// type BookData struct {
+// 	IDs          []string
+// 	Names        []string
+// 	PageNumbers  []uint
+// 	StockNumbers []int
+// 	Prices       []float32
+// 	StockIDs     []string
+// 	ISBNs        []string
+// 	Authors      []Author
+// }
+// type AuthorData struct {
+// 	IDs   []string
+// 	Names []string
+// }
 
-var authors []Author
-var books []Book
+// var authors []Author
+// var books []Book
 
 var usage = `./homework-2-week-3-cagrikilicoglu
 
@@ -53,42 +54,44 @@ Options:
 	delete:  Searches the library by the input book ID given by the user after the command. If the ID matches any of the books, set it's library status to deleted.
 	buy:     Searches the library by the input book ID given by the user after the command. If the ID matches any of the books, order the books by the number after input ID.
 `
+var books []bookList.Book
 
 func main() {
-	dataLength := 5
+	// dataLength := 5
 
-	authorData := AuthorData{
-		IDs:   []string{"101", "202", "303", "404", "505"},
-		Names: []string{"Charles Dickens", "J. R. R. Tolkien", "J. K. Rowling", "Antoine de Saint-Exupéry", "Cao Xueqin"},
-	}
+	// authorData := AuthorData{
+	// 	IDs:   []string{"101", "202", "303", "404", "505"},
+	// 	Names: []string{"Charles Dickens", "J. R. R. Tolkien", "J. K. Rowling", "Antoine de Saint-Exupéry", "Cao Xueqin"},
+	// }
 
-	for i := 0; i < dataLength; i++ {
-		a := *generateAuthor(authorData, i)
-		authors = append(authors, a)
-	}
+	// for i := 0; i < dataLength; i++ {
+	// 	a := *generateAuthor(authorData, i)
+	// 	authors = append(authors, a)
+	// }
 
-	bookData := BookData{
-		IDs:          []string{"1", "2", "3", "4", "5"},
-		Names:        []string{"A Tale of Two Cities", "The Hobbit", "Harry Potter and the Philosophers Stone", "The Little Prince", "Dream of the Red Chamber"},
-		PageNumbers:  []uint{320, 376, 560, 102, 350},
-		StockNumbers: []int{10, 10, 10, 10, 0},
-		Prices:       []float32{15.30, 24.00, 32.20, 7.80, 17.00},
-		StockIDs:     []string{"21AC", "44UY", "22OL", "09UJ", "77II"},
-		ISBNs: []string{"9780451530578", "9780547928227", "9781408855898", "9781853261589",
-			"9780385093798"},
-		Authors: authors,
-	}
+	// bookData := BookData{
+	// 	IDs:          []string{"1", "2", "3", "4", "5"},
+	// 	Names:        []string{"A Tale of Two Cities", "The Hobbit", "Harry Potter and the Philosophers Stone", "The Little Prince", "Dream of the Red Chamber"},
+	// 	PageNumbers:  []uint{320, 376, 560, 102, 350},
+	// 	StockNumbers: []int{10, 10, 10, 10, 0},
+	// 	Prices:       []float32{15.30, 24.00, 32.20, 7.80, 17.00},
+	// 	StockIDs:     []string{"21AC", "44UY", "22OL", "09UJ", "77II"},
+	// 	ISBNs: []string{"9780451530578", "9780547928227", "9781408855898", "9781853261589",
+	// 		"9780385093798"},
+	// 	Authors: authors,
+	// }
 
-	for i := 0; i < dataLength; i++ {
-		b := *generateBook(bookData, i)
-		books = append(books, b)
-	}
+	// for i := 0; i < dataLength; i++ {
+	// 	b := *generateBook(bookData, i)
+	// 	books = append(books, b)
+	// }
 
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, fmt.Sprintf("%s\n", usage))
 	}
 	flag.Parse()
 
+	books = bookList.CreateList()
 	getCommand()
 
 }
@@ -166,7 +169,7 @@ func getByID() {
 	for _, v := range books {
 		if bookID == v.ID {
 
-			if !v.isDeleted {
+			if !v.IsDeleted {
 				fmt.Println(v.Name)
 				isListed = true
 				break
@@ -196,10 +199,10 @@ func getByID() {
 func deleteByID() {
 	isListed := false
 	bookID := strings.Join(os.Args[2:], " ")
-	for _, v := range books {
+	for i, v := range books {
 		if bookID == v.ID {
-			if !v.isDeleted {
-				v.isDeleted = true
+			if !v.IsDeleted {
+				books[i].IsDeleted = true
 				fmt.Printf("%s (with the ID: %s) is successfully deleted from the book list.\n", v.Name, v.ID)
 				isListed = true
 				break
@@ -275,28 +278,28 @@ func buyByID() {
 
 }
 
-// generateBook : takes a book data struct as an input and create books with specified attributes given in this struct.
-func generateBook(data BookData, index int) *Book {
+// // generateBook : takes a book data struct as an input and create books with specified attributes given in this struct.
+// func generateBook(data BookData, index int) *Book {
 
-	book := Book{
-		ID:          data.IDs[index],
-		Name:        data.Names[index],
-		PageNumber:  data.PageNumbers[index],
-		StockNumber: data.StockNumbers[index],
-		Price:       data.Prices[index],
-		StockID:     data.StockIDs[index],
-		ISBN:        data.ISBNs[index],
-		Author:      data.Authors[index],
-	}
-	return &book
-}
+// 	book := Book{
+// 		ID:          data.IDs[index],
+// 		Name:        data.Names[index],
+// 		PageNumber:  data.PageNumbers[index],
+// 		StockNumber: data.StockNumbers[index],
+// 		Price:       data.Prices[index],
+// 		StockID:     data.StockIDs[index],
+// 		ISBN:        data.ISBNs[index],
+// 		Author:      data.Authors[index],
+// 	}
+// 	return &book
+// }
 
-// generateBook : takes an author data struct as an input and create authors with specified attributes given in this struct.
-func generateAuthor(data AuthorData, index int) *Author {
+// // generateBook : takes an author data struct as an input and create authors with specified attributes given in this struct.
+// func generateAuthor(data AuthorData, index int) *Author {
 
-	author := Author{
-		ID:   data.IDs[index],
-		Name: data.Names[index],
-	}
-	return &author
-}
+// 	author := Author{
+// 		ID:   data.IDs[index],
+// 		Name: data.Names[index],
+// 	}
+// 	return &author
+// }
