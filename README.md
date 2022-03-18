@@ -71,7 +71,7 @@ go run main.go delete 3
 
 ### buy Arguement
 
-With the "buy" arguement, the user can buy a certain book of his/her choice from list by the ID of the book. After "buy" arguement, the ID of the book to be ordered should be written. User can also specify the number of the books he/she wants to order after the ID of the book. If any book corresponding the input ID is on the list, the app prints a successful ordering message. If it is not, the app gives error.
+With the "buy" arguement, the user can buy a certain book of his/her choice from list by the ID of the book. After "buy" arguement, the ID of the book to be ordered should be written. User can also specify the number of the books he/she wants to order after the ID of the book. If any book corresponding the input ID is on the list, the app prints a successful ordering message and decreases its stock number. If it is not, the app gives error.
 
 Note that if the stock number of the book is below the number of the books to be ordered, the app prints an unsuccesful ordering message.
 

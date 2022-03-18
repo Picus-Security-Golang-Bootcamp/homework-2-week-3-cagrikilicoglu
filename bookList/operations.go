@@ -24,22 +24,15 @@ func List() {
 func SearchByName() {
 	bookName := strings.Join(os.Args[2:], " ")
 	isListed := false
+
 	for _, v := range books {
-		if strings.ToLower(bookName) == strings.ToLower(v.Name) {
+		if bookName != "" && strings.Contains(strings.ToLower(v.Name), strings.ToLower(bookName)) {
 			fmt.Println(v.Name)
 			isListed = true
-			break
 		}
 	}
-	if isListed == false {
-		for _, v := range books {
-			if bookName != "" && strings.Contains(strings.ToLower(v.Name), strings.ToLower(bookName)) {
-				fmt.Println(v.Name)
-				isListed = true
-			}
-		}
-	}
-	if isListed == false {
+
+	if !isListed {
 		err := errors.New("This book is not the library. Please try another book.")
 		fmt.Println(err)
 	}
@@ -56,14 +49,14 @@ func GetByID() {
 				isListed = true
 				break
 			} else {
-				err := errors.New("The book was on the library. But it is deleted already.")
+				err := errors.New("The book was on the library. But it is deleted already")
 				fmt.Println(err)
 				isListed = true
 				break
 			}
 		}
 	}
-	if isListed == false {
+	if !isListed {
 		err := errors.New("There is no book with this ID. Please try another book.")
 		fmt.Println(err)
 	}
@@ -88,7 +81,7 @@ func DeleteByID() {
 			}
 		}
 	}
-	if isListed == false {
+	if !isListed {
 		err := errors.New("There is no book with this ID. Please try another book.")
 		fmt.Println(err)
 	}
@@ -134,7 +127,7 @@ func BuyByID() {
 			}
 		}
 	}
-	if isListed == false {
+	if !isListed {
 		err := errors.New("There is no book with this ID. Please try another book.")
 		fmt.Println(err)
 	}
